@@ -44,13 +44,20 @@ public class GameManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (paused)
+            if (Input.GetKey(KeyCode.LeftShift))
             {
-                Resume();   
+                Quit();
             }
             else
             {
-                Pause();
+                if (paused)
+                {
+                    Resume();
+                }
+                else
+                {
+                    Pause();
+                }
             }
         }
     }
@@ -121,6 +128,7 @@ public class GameManager : MonoBehaviour
 
     public void Quit()
     {
+        Debug.Log("Quit");
         Application.Quit();
     }
 }
