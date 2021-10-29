@@ -67,6 +67,7 @@ public class GameManager : MonoBehaviour
     public void StartFunc()
     {
         Time.timeScale = 1;
+        Ball.ball.transform.position = Ball.ball.ballPos;
     }
 
 

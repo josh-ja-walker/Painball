@@ -11,7 +11,7 @@ public class Ball : MonoBehaviour
     public float bounceForce;
     public Rigidbody2D rb;
     private bool bounced;
-    private Vector2 ballPos;
+    public Vector2 ballPos;
 
     public GameObject endScreen;
     public TextMeshProUGUI endTime;
