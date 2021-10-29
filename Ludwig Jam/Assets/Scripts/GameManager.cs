@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Cinemachine;
 
 public class GameManager : MonoBehaviour
 {
@@ -21,9 +22,10 @@ public class GameManager : MonoBehaviour
     public GameObject optionScreen;
     public Image optionImage;
     public GameObject startScreen;
-    
-    private bool paused;
 
+    public float pauseAlpha;
+
+    private bool paused;
 
     private void Start()
     {
@@ -80,9 +82,9 @@ public class GameManager : MonoBehaviour
     public void Pause()
     {
         Time.timeScale = 0f;
-
+        
         pauseScreen.SetActive(true);
-
+        
         paused = true;
     }
 
@@ -92,7 +94,7 @@ public class GameManager : MonoBehaviour
 
         pauseScreen.SetActive(false);
         optionScreen.SetActive(false);
-        
+
         paused = false;
     }
 
@@ -100,7 +102,7 @@ public class GameManager : MonoBehaviour
     {
         if (paused)
         {
-            optionImage.color = new Color(0, 0, 0, 150f/255f);
+            optionImage.color = new Color(0, 0, 0, pauseAlpha/255f);
         }
         else
         {
@@ -119,7 +121,6 @@ public class GameManager : MonoBehaviour
             startScreen.SetActive(true);
         }
     }
-
 
     public void Restart()
     {

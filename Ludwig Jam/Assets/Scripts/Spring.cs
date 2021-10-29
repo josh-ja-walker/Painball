@@ -70,7 +70,7 @@ public class Spring : MonoBehaviour
         if (Physics2D.OverlapBox(pos, scale * 0.9f, transform.eulerAngles.z, ballLayer))
         {
             float magnitude = minBallDist / (Ball.ball.transform.position - minPos).magnitude;
-            Debug.Log("magnitude =" +magnitude);
+            Debug.Log("magnitude =" + magnitude);
 
             Ball.ball.transform.position = pos + transform.up * scale.y;
             Ball.ball.rb.velocity = Vector2.zero;
