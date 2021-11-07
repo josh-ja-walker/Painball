@@ -97,7 +97,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audioMix: {fileID: 24100000, guid: 9a83fe3bbeaae8640a38dfec05b1f90a, type: 2}
-  autoValue: 0.8
+  master: {fileID: 1887883030262475334}
+  music: {fileID: 1887883030730306696}
+  sfx: {fileID: 1887883031180648551}
 --- !u!1 &1887883029983790798
 GameObject:
   m_ObjectHideFlags: 0

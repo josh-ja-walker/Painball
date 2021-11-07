@@ -15,6 +15,7 @@ public class Ball : MonoBehaviour
 
     public GameObject endScreen;
     public TextMeshProUGUI endTime;
+    public TextMeshProUGUI endTimeBest;
 
     public AudioSource bounce;
 
@@ -26,7 +27,6 @@ public class Ball : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
-        ballPos = transform.position;
     }
 
     private void Update()
@@ -40,8 +40,46 @@ public class Ball : MonoBehaviour
     void End()
     {
         rb.velocity = Vector2.zero;
-        endTime.text = "Your time was: " + Math.Round(Time.timeSinceLevelLoad/60f, 2) + " minutes\n Well done!!!";
+
+        float time = Time.timeSinceLevelLoad + PlayerPrefs.GetFloat("timeSoFar");
+        endTime.text = "Your time was: " + FormatTime(time);
+
+        float bestTime = PlayerPrefs.GetFloat("bestTime");
+
+        if (bestTime == 0)
+        {
+            endTimeBest.text = "Good job!";
+            PlayerPrefs.SetFloat("bestTime", time);
+        }
+        else if (bestTime < time)
+        {
+            endTimeBest.text = "Your best time is: " + FormatTime(bestTime) + "\nBetter luck next time!";
+        }
+        else
+        {
+            endTimeBest.text = "You beat your best time of " + FormatTime(bestTime) + "\nGood job!";
+            PlayerPrefs.SetFloat("bestTime", time);
+        }
+
         endScreen.SetActive(true);
+    }
+
+    private string FormatTime(float time)
+    {
+        Debug.Log(time);
+        int minutes = (int) Math.Floor(time / 60);
+        Debug.Log(minutes);
+        int seconds = (int) Math.Floor(time - (60 * minutes));
+        
+        if (seconds < 10)
+        {
+            string secStr = "0" + seconds;
+            return $"{minutes}:{secStr}";
+        }
+
+        Debug.Log(seconds);
+        
+        return $"{minutes}:{seconds}";
     }
 
     private void Kill()
@@ -53,11 +91,7 @@ public class Ball : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("end") && !endScreen.activeSelf)
-        {
-            End();
-        }
-        else if (collision.gameObject.CompareTag("kill"))
+        if (collision.gameObject.CompareTag("kill"))
         {
             Kill();
         }
@@ -78,6 +112,15 @@ public class Ball : MonoBehaviour
             bounced = false;
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("end") && !endScreen.activeSelf)
+        {
+            End();
+        }
+    }
+
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.gameObject.CompareTag("confiner"))

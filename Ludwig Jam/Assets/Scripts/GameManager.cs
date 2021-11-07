@@ -8,7 +8,7 @@ using Cinemachine;
 public class GameManager : MonoBehaviour
 {
     [Header("Respawns")]
-    public GameObject ball;
+    public CinemachineVirtualCamera vcam;
 
     [Header("Flippers")]
     public float flipForce;
@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     public GameObject optionScreen;
     public Image optionImage;
     public GameObject startScreen;
+    public GameObject contButton;
 
     public float pauseAlpha;
 
@@ -30,6 +31,11 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         Time.timeScale = 0f;
+    
+        if (PlayerPrefs.GetFloat("timeSoFar") <= 0)
+        {
+            contButton.SetActive(false);
+        }
     }
 
     void Update()
@@ -67,7 +73,22 @@ public class GameManager : MonoBehaviour
     public void StartFunc()
     {
         Time.timeScale = 1;
+        
         Ball.ball.transform.position = Ball.ball.ballPos;
+
+        vcam.PreviousStateIsValid = false;
+    }
+
+    public void Continue()
+    {
+        Time.timeScale = 1;
+
+        Ball.ball.transform.position = new Vector3(
+            PlayerPrefs.GetFloat("ballPosX"),
+            PlayerPrefs.GetFloat("ballPosY"),
+            0);
+
+        vcam.PreviousStateIsValid = false;
     }
 
 
@@ -125,6 +146,21 @@ public class GameManager : MonoBehaviour
 
     public void Restart()
     {
+        if (Ball.ball.endScreen.activeSelf)
+        {
+            PlayerPrefs.SetFloat("ballPosX", 0f);
+            PlayerPrefs.SetFloat("ballPosY", 0f);
+
+            PlayerPrefs.SetFloat("timeSoFar", 0f);
+        }
+        else
+        {
+            PlayerPrefs.SetFloat("ballPosX", Ball.ball.transform.position.x);
+            PlayerPrefs.SetFloat("ballPosY", Ball.ball.transform.position.y);
+
+            PlayerPrefs.SetFloat("timeSoFar", PlayerPrefs.GetFloat("timeSoFar") + Time.timeSinceLevelLoad);
+        }
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
