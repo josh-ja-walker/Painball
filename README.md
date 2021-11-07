@@ -1,14 +1,18 @@
 # Painball
-A Foddian pinball game made for Ludwig Jam
+Have fun in a Foddian pain-in-the-ass pinball platformer. Or don't.
 
-Use left and right mouse button or A and D or left and right arrows to flip each flipper
+This was made in 10 days for the Ludwig Jam, with the theme Foddian.
 
-Use both left and right controls to use springs
 
-Press R to restart (if you have to)
-
-Press Esc to pause
 
 
 
 The music is "Passing Time" by BoxCat, check them out here: https://freemusicarchive.org/music/BoxCat_Games
+
+The sound effects used are:
+
+https://freesound.org/people/soulbaby71/sounds/444062/
+
+https://freesound.org/people/theshaggyfreak/sounds/404144/
+
+https://freesound.org/people/Ev-Dawg/sounds/435514/
