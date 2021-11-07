@@ -14,14 +14,35 @@ public class Volume : MonoBehaviour
 
     private void Start()
     {
-        SetMasterVol(PlayerPrefs.GetFloat("MasterVol"));
-        master.value = PlayerPrefs.GetFloat("MasterVol");
 
-        SetMusicVol(PlayerPrefs.GetFloat("MusicVol"));
-        music.value = PlayerPrefs.GetFloat("MusicVol");
+        if (PlayerPrefs.GetFloat("timeSoFar") <= 0
+            && PlayerPrefs.GetFloat("MasterVol") <= 0
+            && PlayerPrefs.GetFloat("MusicVol") <= 0 
+            && PlayerPrefs.GetFloat("SFXVol") <= 0)
+        {
+            SetMasterVol(0.8f);
+            master.value = 0.8f;
 
-        SetSFXVol(PlayerPrefs.GetFloat("SFXVol"));
-        sfx.value = PlayerPrefs.GetFloat("SFXVol");
+            SetMusicVol(0.8f);
+            music.value = 0.8f;
+
+            SetSFXVol(0.8f);
+            sfx.value = 0.8f;
+        }
+        else 
+        {
+            SetMasterVol(PlayerPrefs.GetFloat("MasterVol"));
+            master.value = PlayerPrefs.GetFloat("MasterVol");
+
+            SetMusicVol(PlayerPrefs.GetFloat("MusicVol"));
+            music.value = PlayerPrefs.GetFloat("MusicVol");
+            
+            SetSFXVol(PlayerPrefs.GetFloat("SFXVol"));
+            sfx.value = PlayerPrefs.GetFloat("SFXVol");
+        }
+
+
+
     }
 
     public void SetMasterVol(float sliderValue)
