@@ -28,14 +28,17 @@ public class GameManager : MonoBehaviour
 
     private bool paused;
 
-    private void Start()
+    private void Awake()
     {
-        Time.timeScale = 0f;
-    
         if (PlayerPrefs.GetFloat("timeSoFar") <= 0)
         {
             contButton.SetActive(false);
         }
+    }
+
+    private void Start()
+    {
+        Time.timeScale = 0f;
     }
 
     void Update()
