@@ -4,99 +4,87 @@ using UnityEngine;
 
 public class Spring : MonoBehaviour
 {
-    public float springForce;
+    [SerializeField] private float springForce;
+    private float magnitude;
 
-    public float ballRadius;
-    public LayerMask ballLayer;
+    [SerializeField] private float ballRadius;
+    [SerializeField] private LayerMask ballLayer;
+    [SerializeField] private float checkOverflow;
 
-    public float minScale;
-    public float ballOnScale;
-    public float decreaseSpeed;
+    private float yPos;
+    private float yScale;
 
-    private Vector3 scale;
-    private Vector3 pos;
-    private Vector3 minPos;
-    private float minBallDist;
+    private bool released;
 
-    private bool shrink;
-    public bool release;
+    [SerializeField] private AudioSource springAudio;
+    private bool playAudio;
+    [SerializeField] private Animator anim;
 
-    public BoxCollider2D col;
-    public float waitTime;
-
-    public AudioSource springAudio;
-
-    void Start()
+    void Awake()
     {
-        scale = transform.localScale;
-        pos = transform.position;
-        minPos = pos - (transform.up * ((1 - minScale) * 0.5f * scale.y));
-        minBallDist = (minScale * scale.y * 0.5f) + ballRadius;
+        yPos = transform.position.y;
+        yScale = transform.localScale.y;
     }
 
-    void Update()
-    {
-        if (Input.GetButton("FlipLeft") && Input.GetButton("FlipRight"))
+    void FixedUpdate()
+    {   
+        if (released)
         {
-            shrink = true;
-        }
-            
-        if (shrink)
-        {
-            if (!(Input.GetButton("FlipLeft") && Input.GetButton("FlipRight")))
+            if (Physics2D.OverlapBox(transform.position + (0.5f * checkOverflow * transform.parent.up),
+                transform.localScale + (transform.parent.up * checkOverflow),
+                transform.parent.eulerAngles.z, ballLayer))
             {
-                release = true;
+                Ball.ball.transform.position = transform.GetChild(0).position + (transform.parent.up * ballRadius);
+                //Ball.ball.transform.position = transform.parent.GetChild(2).position;//new Vector3(transform.position.x, yPos) + (((yScale / 2) + ballRadius) * transform.up);
+
+                if (playAudio)
+                {
+                    springAudio.Play(); //play release audio
+                    playAudio = false;
+                }
+
+                if (transform.localScale.y == yScale)
+                {
+                    Fire();
+                }
             }
+
+            released = transform.localScale.y != yScale;
         }
     }
 
-    private void FixedUpdate()
+    public void StartPull()
     {
-        if (shrink)
+        if (anim.GetBool("pulling")) return; //do nothing if spring is already being pulled back
+       
+        if (anim.GetCurrentAnimatorStateInfo(0).IsName("Static")) //if animator is not being pulled or released
         {
-            transform.localScale = new Vector3(scale.x, Mathf.MoveTowards(transform.localScale.y, minScale * scale.y, decreaseSpeed * Time.deltaTime), scale.z);
-            transform.position = pos - transform.up * (scale.y - transform.localScale.y) / 2;
-
-            if (release)
-            {
-                shrink = false;
-                Fire();
-            }
+            anim.SetBool("pulling", true); //start pulling
         }
+    }
+
+    public void Release()
+    {
+        if (!anim.GetBool("pulling")) return; //do nothing if not pulling
+
+        anim.SetBool("pulling", false); //start releasing
+
+        magnitude = Mathf.Abs(yPos - transform.position.y); //calculate distance pulled back
+
+        released = true;
+        playAudio = true;
     }
 
     void Fire()
     {
-        if (Physics2D.OverlapBox(pos, scale * 0.9f, transform.eulerAngles.z, ballLayer))
-        {
-            float magnitude = minBallDist / (Ball.ball.transform.position - minPos).magnitude;
-            Debug.Log("magnitude =" + magnitude);
-
-            Ball.ball.transform.position = pos + transform.up * scale.y;
-            Ball.ball.rb.velocity = Vector2.zero;
-            Ball.ball.rb.AddForce(magnitude * springForce * transform.up, ForceMode2D.Impulse);
-            springAudio.Play();
-        }
-
-        col.enabled = false;
-        StartCoroutine(ActivateCol());
-
-        transform.localScale = scale;
-        transform.position = pos;
-
-        release = false;
-    }
-
-    IEnumerator ActivateCol()
-    {
-        yield return new WaitForSeconds(waitTime);
-        col.enabled = true;
+        Debug.Log("fire");
+        Ball.ball.Rigidbody().AddForce(magnitude * springForce * transform.parent.up, ForceMode2D.Impulse);
+        released = false;
     }
 
     private void OnDrawGizmosSelected()
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawWireCube(pos, scale);
-        Gizmos.DrawSphere(minPos, 0.1f);
+        Gizmos.DrawWireCube(transform.position + (Vector3.up * 0.5f * checkOverflow), transform.localScale + (Vector3.up * checkOverflow));
     }
 }

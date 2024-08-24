@@ -9,6 +9,7 @@ TagManager:
   - confiner
   - kill
   - end
+  - cam parent
   layers:
   - Default
   - TransparentFX
@@ -19,9 +20,9 @@ TagManager:
   - Ball
   - Wall
   - Objects
-  - FlipRight
   - FlipLeft
-  - 
+  - FlipRight
+  - Spring
   - 
   - 
   - 

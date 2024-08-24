@@ -4,29 +4,31 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using Cinemachine;
+using System.ComponentModel;
+using System.Linq;
+using TMPro;
+using System;
 
 public class GameManager : MonoBehaviour
 {
-    [Header("Respawns")]
-    public CinemachineVirtualCamera vcam;
-
-    [Header("Flippers")]
-    public float flipForce;
-    public float flipGravity;
-
-    public List<Collider2D> leftFlips = new List<Collider2D>();
-    public List<Collider2D> rightFlips = new List<Collider2D>();
+    public static GameManager GM;
 
     [Header("UI")]
-    public GameObject pauseScreen;
-    public GameObject optionScreen;
-    public Image optionImage;
-    public GameObject startScreen;
-    public GameObject contButton;
-
-    public float pauseAlpha;
-
+    [SerializeField] private GameObject pauseScreen;
+    [SerializeField] private float pauseAlpha;
     private bool paused;
+
+    [SerializeField] private GameObject optionScreen;
+    [SerializeField] private Image optionImage;
+    
+    [SerializeField] private GameObject startScreen;
+    [SerializeField] private GameObject contButton;
+
+    [Header("End")]
+    [SerializeField] private GameObject endScreen;
+    [SerializeField] private TextMeshProUGUI endTime;
+    [SerializeField] private TextMeshProUGUI endTimeBest;
+
 
     private void Awake()
     {
@@ -34,6 +36,8 @@ public class GameManager : MonoBehaviour
         {
             contButton.SetActive(false);
         }
+
+        GM = this;
     }
 
     private void Start()
@@ -43,15 +47,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetButton("FlipLeft"))
-        {
-            Flip(1, leftFlips);
-        }
-        
-        if (Input.GetButton("FlipRight"))
-        {
-            Flip(-1, rightFlips);
-        }
+
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -73,13 +69,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void StartFunc()
+
+    public void StartGame()
     {
         Time.timeScale = 1;
         
-        Ball.ball.transform.position = Ball.ball.ballPos;
+        Ball.ball.transform.position = Ball.ball.RespawnPos();
 
-        vcam.PreviousStateIsValid = false;
+        //vcam.PreviousStateIsValid = false;
     }
 
     public void Continue()
@@ -91,18 +88,8 @@ public class GameManager : MonoBehaviour
             PlayerPrefs.GetFloat("ballPosY"),
             0);
 
-        vcam.PreviousStateIsValid = false;
+        //vcam.PreviousStateIsValid = false;
     }
-
-
-    void Flip(int forceMult, List<Collider2D> results)
-    {
-        foreach (Collider2D col in results)
-        {
-            col.attachedRigidbody.AddTorque(forceMult * flipForce);
-        }
-    }
-    
 
     public void Pause()
     {
@@ -149,7 +136,7 @@ public class GameManager : MonoBehaviour
 
     public void Restart()
     {
-        if (Ball.ball.endScreen.activeSelf)
+        if (endScreen.activeSelf)
         {
             PlayerPrefs.SetFloat("ballPosX", 0f);
             PlayerPrefs.SetFloat("ballPosY", 0f);
@@ -167,9 +154,57 @@ public class GameManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 
+    public void End()
+    {
+        if (!endScreen.activeSelf) return;
+
+        Ball.ball.Rigidbody().velocity = Vector2.zero;
+
+        float time = Time.timeSinceLevelLoad + PlayerPrefs.GetFloat("timeSoFar");
+        endTime.text = "Your time was: " + FormatTime(time);
+
+        float bestTime = PlayerPrefs.GetFloat("bestTime");
+
+        if (bestTime == 0)
+        {
+            endTimeBest.text = "Good job!";
+            PlayerPrefs.SetFloat("bestTime", time);
+        }
+        else if (bestTime < time)
+        {
+            endTimeBest.text = "Your best time is: " + FormatTime(bestTime) + "\nBetter luck next time!";
+        }
+        else
+        {
+            endTimeBest.text = "You beat your best time of " + FormatTime(bestTime) + "\nGood job!";
+            PlayerPrefs.SetFloat("bestTime", time);
+        }
+
+        endScreen.SetActive(true);
+    }
+
+    private string FormatTime(float time)
+    {
+        Debug.Log(time);
+        int minutes = (int) Math.Floor(time / 60);
+        Debug.Log(minutes);
+        int seconds = (int) Math.Floor(time - (60 * minutes));
+
+        if (seconds < 10)
+        {
+            string secStr = "0" + seconds;
+            return $"{minutes}:{secStr}";
+        }
+
+        Debug.Log(seconds);
+
+        return $"{minutes}:{seconds}";
+    }
+
     public void Quit()
     {
         Debug.Log("Quit");
         Application.Quit();
     }
+
 }
