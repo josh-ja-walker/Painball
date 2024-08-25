@@ -4,7 +4,7 @@ Have fun in a Foddian pain-in-the-ass pinball platformer. Or don't.
 This was made in 10 days for the Ludwig Jam, with the theme Foddian.
 
 
-
+https://joshwalker.itch.io/painball
 
 
 The music is "Passing Time" by BoxCat, check them out here: https://freemusicarchive.org/music/BoxCat_Games
