@@ -70,12 +70,12 @@ PrefabInstance:
     - target: {fileID: 200261260085222409, guid: 83b5b18bcb0e5204c9dc24d9a03a7494,
         type: 3}
       propertyPath: m_Name
-      value: Spring (no walls)
+      value: Spring
       objectReference: {fileID: 0}
     - target: {fileID: 8264611887440273005, guid: 83b5b18bcb0e5204c9dc24d9a03a7494,
         type: 3}
-      propertyPath: ballRadius
-      value: 0.2
+      propertyPath: anim
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 83b5b18bcb0e5204c9dc24d9a03a7494, type: 3}

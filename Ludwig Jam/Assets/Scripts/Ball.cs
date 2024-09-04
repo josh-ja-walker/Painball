@@ -28,28 +28,17 @@ public class Ball : MonoBehaviour
     private CinemachineBrain cBrain;
     private CinemachineBlendDefinition defaultBlend;
 
-    private void Awake()
-    {
+    private void Awake() {
         ball = this;
     }
 
-    private void Start()
-    {
+    private void Start() {
         rb = GetComponent<Rigidbody2D>();
         cBrain = Camera.main.GetComponent<CinemachineBrain>();
         defaultBlend = cBrain.m_DefaultBlend;
     }
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            Kill();
-        }
-    }
-
-    private void Kill()
-    {
+    private void Kill() {
         cBrain.m_DefaultBlend = new CinemachineBlendDefinition(CinemachineBlendDefinition.Style.Cut, 0);
 
         rb.velocity = Vector2.zero;
@@ -59,53 +48,43 @@ public class Ball : MonoBehaviour
         Invoke(nameof(ResetDefaultBlend), 1f);
     }
 
-    private void ResetDefaultBlend()
-    {
+    private void ResetDefaultBlend() {
         cBrain.m_DefaultBlend = defaultBlend;
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("kill"))
-        {
+    private void OnCollisionEnter2D(Collision2D collision) {
+        if (collision.gameObject.CompareTag("kill")) {
             Kill();
-        }
-        else if (collision.gameObject.CompareTag("bouncy") && !bounced)
-        {
+        } else if (collision.gameObject.CompareTag("bouncy") && !bounced) {
             bounce.Play();
+
             ContactPoint2D contact = collision.GetContact(0);
             rb.AddForceAtPosition(contact.normal * bounceForce, contact.point, ForceMode2D.Impulse);
+            
             Debug.Log("bounced");
             bounced = true;
         }
     }
 
-    private void OnCollisionExit2D(Collision2D collision)
-    {
-        if (collision.gameObject.CompareTag("bouncy"))
-        {
+    private void OnCollisionExit2D(Collision2D collision) {
+        if (collision.gameObject.CompareTag("bouncy")) {
             bounced = false;
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("end"))
-        {
+    private void OnTriggerEnter2D(Collider2D collision) {
+        if (collision.gameObject.CompareTag("end")) {
             GameManager.GM.End();
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision)
-    {
-        if (collision.gameObject.CompareTag("confiner"))
-        {
+    private void OnTriggerExit2D(Collider2D collision) {
+        if (collision.gameObject.CompareTag("confiner")) {
             Kill();
         }
     }
 
-    private void OnDrawGizmos()
-    {
+    private void OnDrawGizmos() {
         Gizmos.color = Color.white;
         Gizmos.DrawSphere(respawnPos, 0.5f);
     }

@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public class Player : MonoBehaviour
-{
+public class Player : MonoBehaviour {
+
     [SerializeField] private float flipForce;
     [SerializeField] private float flipGravity;
 
@@ -19,69 +19,64 @@ public class Player : MonoBehaviour
     private bool isLFlip;
     private bool isRFlip;
 
-    private void Update()
-    {
+    private void Update() {
         isLFlip = Input.GetButton("FlipLeft");
         isRFlip = Input.GetButton("FlipRight");
     }
 
-    private void FixedUpdate()
-    {
+    private void FixedUpdate() {
         if (isLFlip) Flip(Direction.L);
-
         if (isRFlip) Flip(Direction.R);
 
-        if (isLFlip && isRFlip)
-        {
+        if (isLFlip && isRFlip) {
             PullSpring();
         } else {
             ReleaseSpring();
         }
     }
 
-    private Collider2D[] Check(LayerMask layer)
-    {
+    private Collider2D[] Check(LayerMask layer) {
         Vector3 vcamPos = Camera.main.transform.position;
-        Vector2 corner = new Vector2((Camera.main.orthographicSize * (32f / 9f)) + checkOverflow,
+        Vector2 corner = new Vector2(
+            (Camera.main.orthographicSize * (32f / 9f)) + checkOverflow,
             (Camera.main.orthographicSize * 2) + checkOverflow);
 
-        return Physics2D.OverlapAreaAll(new Vector2(vcamPos.x, vcamPos.y) + corner,
-            new Vector2(vcamPos.x, vcamPos.y) - corner, layer);
+        return Physics2D.OverlapAreaAll(
+            (Vector2)vcamPos + corner,
+            (Vector2)vcamPos - corner, 
+            layer);
     }
 
-    private Collider2D[] Check(LayerMask layer, string tag)
-    {
-        return Check(layer).AsEnumerable().Where(col => col.CompareTag(tag)).ToArray();
+    private Collider2D[] Check(LayerMask layer, string tag) {
+        return Check(layer)
+            .AsEnumerable()
+            .Where(col => col.CompareTag(tag))
+            .ToArray();
     }
 
-    void PullSpring()
-    {
-        foreach (Collider2D col in Check(springLayer))
-        {
-            col.GetComponent<Spring>().StartPull();
+    void PullSpring() {
+        foreach (Collider2D col in Check(springLayer)) {
+            col.transform.parent.GetComponent<Spring>().StartPull();
         }
     }
 
-    void ReleaseSpring()
-    {
-        foreach (Collider2D col in Check(springLayer))
-        {
-            col.GetComponent<Spring>().Release();
+    void ReleaseSpring() {
+        foreach (Collider2D col in Check(springLayer)) {
+            col.transform.parent.GetComponent<Spring>().Release();
         }
     }
 
-    void Flip(Direction dir)
-    {
-        foreach (Collider2D col in Check(dir.Equals(Direction.L) ? lFlipLayer : rFlipLayer))
-        {
+    void Flip(Direction dir) {
+        foreach (Collider2D col in Check(dir.Equals(Direction.L) ? lFlipLayer : rFlipLayer)) {
             col.attachedRigidbody.AddTorque((dir.Equals(Direction.L) ? 1 : -1) * flipForce);
         }
     }
 
-    private void OnDrawGizmosSelected()
-    {
+    private void OnDrawGizmosSelected() {
         Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(Camera.main.transform.position, new Vector2((Camera.main.orthographicSize * (32f / 9f)) + checkOverflow, 
+        Gizmos.DrawWireCube(
+            Camera.main.transform.position, 
+            new Vector2((Camera.main.orthographicSize * (32f / 9f)) + checkOverflow, 
             (Camera.main.orthographicSize * 2) + checkOverflow));
     }
 }

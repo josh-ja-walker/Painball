@@ -4,33 +4,31 @@ using UnityEngine;
 using UnityEngine.Audio;
 using UnityEngine.UI;
 
-public class Volume : MonoBehaviour
-{
+public class Volume : MonoBehaviour {
+
     public AudioMixer audioMix;
 
     public Slider master;
     public Slider music;
     public Slider sfx;
 
-    private void Start()
-    {
+    private const float DEFAULT_VOLUME = 0.8f;
 
-        if (PlayerPrefs.GetFloat("timeSoFar") <= 0
-            && PlayerPrefs.GetFloat("MasterVol") <= 0
-            && PlayerPrefs.GetFloat("MusicVol") <= 0 
-            && PlayerPrefs.GetFloat("SFXVol") <= 0)
-        {
-            SetMasterVol(0.8f);
-            master.value = 0.8f;
+    private void Start() {
+        if (PlayerPrefs.GetFloat("timeSoFar") + 
+            PlayerPrefs.GetFloat("MasterVol") +
+            PlayerPrefs.GetFloat("MusicVol") +
+            PlayerPrefs.GetFloat("SFXVol") <= 0) {
 
-            SetMusicVol(0.8f);
-            music.value = 0.8f;
+            SetMasterVol(DEFAULT_VOLUME);
+            master.value = DEFAULT_VOLUME;
 
-            SetSFXVol(0.8f);
-            sfx.value = 0.8f;
-        }
-        else 
-        {
+            SetMusicVol(DEFAULT_VOLUME);
+            music.value = DEFAULT_VOLUME;
+
+            SetSFXVol(DEFAULT_VOLUME);
+            sfx.value = DEFAULT_VOLUME;
+        } else {
             SetMasterVol(PlayerPrefs.GetFloat("MasterVol"));
             master.value = PlayerPrefs.GetFloat("MasterVol");
 
@@ -41,25 +39,19 @@ public class Volume : MonoBehaviour
             sfx.value = PlayerPrefs.GetFloat("SFXVol");
         }
 
-
-
     }
 
-    public void SetMasterVol(float sliderValue)
-    {
+    public void SetMasterVol(float sliderValue) {
         PlayerPrefs.SetFloat("MasterVol", sliderValue);
         audioMix.SetFloat("MasterVol", Mathf.Log10(sliderValue) * 20);
     }
 
-    public void SetMusicVol(float sliderValue)
-    {
+    public void SetMusicVol(float sliderValue) {
         PlayerPrefs.SetFloat("MusicVol", sliderValue);
-        
         audioMix.SetFloat("MusicVol", Mathf.Log10(sliderValue) * 20);
     }
 
-    public void SetSFXVol(float sliderValue)
-    {
+    public void SetSFXVol(float sliderValue) {
         PlayerPrefs.SetFloat("SFXVol", sliderValue);
         audioMix.SetFloat("SFXVol", Mathf.Log10(sliderValue) * 20);
     }
