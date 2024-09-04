@@ -6,9 +6,12 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 0
-    path: Assets/_Pinball/Scenes/Main.unity
-    guid: 7cbbd970ba3032947b242b54351661d6
-  - enabled: 1
+    path: 
+    guid: 00000000000000000000000000000000
+  - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/Level.unity
+    guid: 967b0e1b503995e44ba0427e98c45f28
   m_configObjects: {}
