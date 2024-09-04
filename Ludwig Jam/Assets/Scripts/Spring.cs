@@ -8,6 +8,7 @@ public class Spring : MonoBehaviour {
     [SerializeField] private float springForce = 30.0f;
     [SerializeField] private float ballRadius = 0.2f;
     [SerializeField] private float checkOverflow = 0.1f;
+    [SerializeField] private float checkShrink = 0.8f;
     private Vector3 checkSize;
 
     private float magnitude;
@@ -29,7 +30,7 @@ public class Spring : MonoBehaviour {
 
 
     private void Start() {
-        checkSize = new Vector2(collider.transform.localScale.x * 0.9f, GetScale());
+        checkSize = new Vector2(collider.transform.localScale.x * checkShrink, GetScale() + checkOverflow);
         maxScale = GetScale();
 
         ballParent = Ball.ball.transform.parent;
@@ -92,7 +93,7 @@ public class Spring : MonoBehaviour {
     bool CheckBall() {
         return Physics2D.OverlapBox(
             transform.position + ((checkOverflow / 2.0f) * transform.up),
-            checkSize + (transform.up * checkOverflow),
+            checkSize,
             transform.eulerAngles.z,
             ballLayer);
     }
@@ -102,7 +103,7 @@ public class Spring : MonoBehaviour {
         Gizmos.DrawWireSphere(ballPos.position, ballRadius);
         Gizmos.DrawCube(
             transform.position + ((checkOverflow / 2.0f) * transform.up),
-            checkSize + (transform.up * checkOverflow)
+            checkSize
         );
     }
 }

@@ -45,7 +45,7 @@ public class Ball : MonoBehaviour
         rb.angularVelocity = 0;
         transform.position = respawnPos;
 
-        Invoke(nameof(ResetDefaultBlend), 1f);
+        Invoke(nameof(ResetDefaultBlend), 2f);
     }
 
     private void ResetDefaultBlend() {

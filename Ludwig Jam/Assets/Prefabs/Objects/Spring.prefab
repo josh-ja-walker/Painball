@@ -257,6 +257,7 @@ MonoBehaviour:
   springForce: 37.5
   ballRadius: 0.2
   checkOverflow: 0.1
+  checkShrink: 0.8
   anim: {fileID: 4300782410619093614}
   ballPos: {fileID: 3612386154100081205}
   collider: {fileID: 8264611887440272994}

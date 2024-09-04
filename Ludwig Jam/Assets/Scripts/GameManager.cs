@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.Linq;
 using TMPro;
 using System;
+using UnityEngine.EventSystems;
 
 public class GameManager : MonoBehaviour {
     public static GameManager GM;
@@ -22,6 +23,10 @@ public class GameManager : MonoBehaviour {
     
     [SerializeField] private GameObject startScreen;
     [SerializeField] private GameObject contButton;
+    [SerializeField] private GameObject startButton;
+    [SerializeField] private GameObject unpauseButton;
+
+    [SerializeField] private EventSystem eventSystem;
 
     [Header("End")]
     [SerializeField] private GameObject endScreen;
@@ -71,6 +76,7 @@ public class GameManager : MonoBehaviour {
 
     public void Pause() {
         Time.timeScale = 0f;
+        eventSystem.SetSelectedGameObject(unpauseButton);
         pauseScreen.SetActive(true);
         paused = true;
     }
