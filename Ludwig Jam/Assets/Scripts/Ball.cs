@@ -78,12 +78,6 @@ public class Ball : MonoBehaviour
         }
     }
 
-    private void OnTriggerExit2D(Collider2D collision) {
-        if (collision.gameObject.CompareTag("confiner")) {
-            Kill();
-        }
-    }
-
     private void OnDrawGizmos() {
         Gizmos.color = Color.white;
         Gizmos.DrawSphere(respawnPos, 0.5f);

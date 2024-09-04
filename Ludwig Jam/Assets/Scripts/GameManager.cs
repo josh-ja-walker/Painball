@@ -109,7 +109,7 @@ public class GameManager : MonoBehaviour {
     }
 
     public void End() {
-        if (!endScreen.activeSelf) return;
+        if (endScreen.activeSelf) return;
 
         Ball.ball.Rigidbody().velocity = Vector2.zero;
 
